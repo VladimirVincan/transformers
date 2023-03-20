@@ -1,0 +1,27 @@
+python3 run_speech_recognition_ctc.py \
+	     --dataset_name="cv-corpus-12.0-2022-12-07" \
+       --use_auth_token=True \
+	     --model_name_or_path="facebook/wav2vec2-large-xlsr-53" \
+	     --dataset_config_name="sr" \
+	     --output_dir="./test-common_voice-sr-demo-wav2vec2-large" \
+	     --overwrite_output_dir \
+	     --num_train_epochs="15" \
+       --preprocessing_num_workers="1" \
+	     --per_device_train_batch_size="16" \
+	     --gradient_accumulation_steps="2" \
+	     --learning_rate="3e-4" \
+	     --weight_decay="0.005" \
+	     --warmup_steps="500" \
+	     --evaluation_strategy="steps" \
+	     --text_column_name="sentence" \
+	     --save_steps="400" \
+	     --eval_steps="100" \
+	     --logging_steps="1" \
+	     --layerdrop="0.0" \
+	     --save_total_limit="3" \
+	     --gradient_checkpointing \
+	     --chars_to_ignore , ? . ! - \; \: \" “ % ‘ ” � \
+	     --group_by_length \
+       --freeze_feature_encoder \
+       --no_cuda \
+	     --do_train --do_eval
