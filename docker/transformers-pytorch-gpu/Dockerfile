@@ -7,8 +7,15 @@ RUN apt update
 RUN apt install -y git libsndfile1-dev tesseract-ocr espeak-ng python3 python3-pip ffmpeg
 RUN python3 -m pip install --no-cache-dir --upgrade pip
 
+# BASH SHELL - interactive terminal
+RUN apt-get update
+RUN apt-get install -y --no-install-recommends --no-cache-dir \
+    bash-completion \
+    less \
+    vim
+
 ARG REF=main
-RUN git clone https://github.com/huggingface/transformers && cd transformers && git checkout $REF
+RUN git clone https://github.com/VladimirVincan/transformers.git && cd transformers && git checkout $REF
 RUN python3 -m pip install --no-cache-dir -e ./transformers[dev-torch,testing,video]
 
 # If set to nothing, will install the latest version
@@ -25,8 +32,13 @@ RUN [ ${#TORCH_AUDIO} -gt 0 ] && VERSION='torchaudio=='TORCH_AUDIO'.*' ||  VERSI
 RUN python3 -m pip uninstall -y tensorflow flax
 
 RUN python3 -m pip install --no-cache-dir git+https://github.com/facebookresearch/detectron2.git pytesseract
+RUN python3 -m pip install --no-cache-dir jiwer
 RUN python3 -m pip install -U "itsdangerous<2.1.0"
 
 # When installing in editable mode, `transformers` is not recognized as a package.
 # this line must be added in order for python to be aware of transformers.
 RUN cd transformers && python3 setup.py develop
+
+ADD cv-corpus-12.0-2022-12-07 ./cv-corpus-12.0-2022-12-07
+COPY whisper-cpu.py .
+COPY whisper-gpu.py .
